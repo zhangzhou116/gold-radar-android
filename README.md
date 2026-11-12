@@ -10,11 +10,12 @@
 
 源码采用 [MIT 许可证](LICENSE)，允许使用、修改、分发和商业使用，须保留版权与许可声明。模型和行情服务的使用条款独立适用。
 
+- **直接下载安装 APK：[最新版下载](https://github.com/zhangzhou116/gold-radar-android/releases/latest)**，展开 Assets，选择 `GoldRadar-1.3.1.apk`。
 - 从零构建与USB安装：[部署教程](docs/DEPLOY.md)。
 - 配置自己的模型、看报告与常见问题：[使用教程](docs/USAGE.md)。
 - 密钥与签名管理：[安全说明](SECURITY.md)。
 
-仓库不附带作者的模型密钥。没有公开上传个人调试APK；普通用户按教程构建普通版并填写自己的Key。
+仓库不附带作者的模型密钥。没有公开上传个人调试APK；普通用户可以从 Releases 下载普通版，或按教程自行构建，再填写自己的 Key。
 
 ## 安装与使用
 
