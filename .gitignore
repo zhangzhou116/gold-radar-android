@@ -1,0 +1,14 @@
+build/
+.signing/
+dist/
+local.properties
+*.log
+.DS_Store
+.env
+.env.*
+!.env.example
+*.jks
+*.keystore
+*.pem
+__pycache__/
+node_modules/

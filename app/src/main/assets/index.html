@@ -1,0 +1,38 @@
+<!doctype html>
+<html lang="zh-CN"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><meta name="theme-color" content="#f7f5ef"><meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self'; style-src 'self'; img-src 'self' data:; connect-src 'none'; object-src 'none'; frame-src 'none'; base-uri 'none'"><title>黄金局势</title><link rel="stylesheet" href="style.css"><link rel="stylesheet" href="dashboard.css"></head>
+<body>
+<header><div class="brand"><span class="mark">Au</span><div><b>黄金局势</b><small>GOLD / PERSONAL RESEARCH</small></div></div><button id="refresh" aria-label="刷新行情">↻ 刷新</button></header>
+<main>
+<div id="status" role="status">正在准备本机分析…</div>
+<div class="currency-controls" aria-label="黄金价格显示单位"><span>价格单位</span><button data-gold-currency="CNY" type="button">人民币／克</button><button data-gold-currency="USD" type="button">美元／盎司</button></div>
+<section id="overview" class="page active">
+  <div class="eyebrow">市场速览 <span>01 / OVERVIEW</span></div>
+  <article class="hero"><div class="hero-label">纽约黄金 <span id="goldUnit">人民币／克</span></div><div id="goldPrice" class="big-price">—<small>等待公开报价</small></div><div id="goldChange" class="change">—</div><div id="goldTime" class="fine">每条行情保留来源与数据时间</div><div class="spark"><svg id="chart" viewBox="0 0 360 116" role="img" aria-label="黄金日线走势"></svg></div><div class="chart-foot"><span id="chartCaption">近 60 个日线观测 · 非分时行情</span><span id="chartRange">—</span></div></article>
+  <div class="market-grid"><article><label>美元指数</label><strong id="dollarPrice">—</strong><small id="dollarDetail">等待数据</small></article><article><label>美债 10 年收益率</label><strong id="yieldPrice">—</strong><small id="yieldDetail">名义利率 · 不是实际利率</small></article></div>
+  <article class="rmb"><span>人民币折算参考 <small>非国内零售价</small></span><strong id="rmbPrice">— 元/克</strong><p id="rmbDetail">国际期货价 × 美元兑人民币 ÷ 31.1034768；不含国内溢价、加工费或买卖价差。</p></article>
+  <div class="section-heading"><h2>新闻综合研判</h2><button id="homeResearchOpen" class="text-button">进入研判 ↗</button></div><article id="homeResearch" class="verdict"><div class="pill">新闻 × 动荡 × 跨市场</div><h1>尚未生成综合研判</h1><p>点击进入研判，配置模型后结合新闻与跨市场证据分析未来1–5日。下方基础指标不是新闻分析结论。</p></article>
+  <div class="section-heading"><h2>基础指标倾向</h2><button id="goAnalysis" class="text-button">看依据 ↗</button></div>
+  <article class="verdict"><div id="verdictTag" class="pill">本机规则分析</div><h1 id="verdictTitle">等待足够数据</h1><p id="verdictSummary">先核对价格，再看驱动因素。这里不会展示未经校准的“上涨概率”。</p><div id="factorCount" class="factor-count">—</div></article>
+  <div id="homeWarnings"></div>
+  <p class="note">本机计算，无需账户和自建服务器。更新时手机直连公开数据源；行情可能延迟。规则偏向不是未来收益承诺。</p>
+</section>
+<section id="analysis" class="page">
+  <div class="eyebrow">综合研判 <span>02 / RESEARCH</span></div>
+  <article class="research-setup"><div class="section-heading"><h2>新闻 × 局势 × 跨市场</h2><button id="aiConfig" class="text-button">配置模型 ↗</button></div><p id="aiConfigStatus">正在读取本机配置…</p><p><span id="aiFlow">未来 1 / 3 / 5 个交易日。每次最多两次模型调用；可选 GPT live 检索，再综合分析并检查反证。不保证预测正确率。</span></p><button id="aiRun" class="primary">开始综合研判 · 付费调用</button><div id="aiProgress" role="status"></div><p id="evidenceStatus"></p></article>
+  <div id="researchReport"><article class="empty">配置自己的 API Key 后，手动开始研判。未配置时仍可使用下方本机指标。</article></div>
+  <details class="evidence-details"><summary>本次可用证据与缺失信息</summary><div id="evidenceList"></div></details>
+  <div class="section-heading"><h2>前向检验记录</h2><span>不是模型自评</span></div><div id="forecastHistory"></div>
+  <article class="method"><h3>怎样衡量“正确”？</h3><p>每份报告保留时间、模型、证据和 1/3/5 日判断。以报告之后、纽约日期更晚的第一根已结束日线收盘作为参考入场；再经过 1/3/5 根已结束日线核验。当天未结束日线不结算。涨超过 0.3% 才算看多正确，跌超过 0.3% 才算看空正确，方向判断遇横盘算错；观望不计命中率，但计入总数。</p><p>这是保守的日线观察口径，不是实时成交价回测。收益未扣成本，连续期货有展期差异。每天多次、不同周期的结果重叠，不能当作独立样本；即使记录显示90%，也不代表真实胜率已获验证。</p></article>
+  <div class="eyebrow">本机指标 <span>RULES / v1</span></div>
+  <h1 class="page-title">判断背后的依据</h1><p class="lead">以下是四项规则指标，与上方新闻综合研判分别呈现。它们不是大模型结论。</p>
+  <div id="factors" class="factors"><article class="empty">尚未获得足够历史数据</article></div>
+  <div class="section-heading"><h2>技术观察位</h2><span id="levelsUnit">人民币／克</span></div><article id="levels" class="levels empty">黄金日线可用后计算</article>
+  <div class="section-heading"><h2>未来 5 日波动参考</h2><span>非目标价预测</span></div><article id="scenarios" class="scenarios empty">黄金日线可用后计算</article>
+  <p class="note">用最近 20 个日收益的样本标准差 × √5，围绕日线末值给出 ±1σ 尺度。不估计趋势收益、不承诺区间覆盖率，也不是统计校准后的置信区间。</p>
+  <article class="method"><h3>哪些重要因素还没覆盖？</h3><p>实际利率、全球央行购金、ETF 资金流、持仓及突发地缘事件未进入本版规则。新闻保留原文，不自动把标题判断为利多或利空。因子数量不等于上涨概率。</p></article>
+</section>
+<section id="news" class="page"><div class="eyebrow">消息与事件 <span>03 / CONTEXT</span></div><h1 class="page-title">读原文，再下判断</h1><p class="lead">黄金与美联储相关新闻，以及美联储官方公告。新闻标题来自来源本身，未经 AI 改写。</p><div class="news-tabs"><button id="newsGold" class="selected">黄金消息</button><button id="newsFed">美联储</button><button id="newsGeo">地缘局势</button><button id="newsIndustry">行业趋势</button></div><div id="newsList"><article class="empty">正在连接消息源…</article></div><p class="note">点击条目由手机浏览器打开原文。Google News 为聚合入口；标题摘要不是全文，重复转载不代表多份独立事实。官方公告包含非货币政策内容，不能一概理解为利率信号。综合研判只使用最近 7 天的有效条目。</p></section>
+<section id="settings" class="page"><div class="eyebrow">数据与方法 <span>04 / SOURCES</span></div><h1 class="page-title">每个数字都可核对</h1><p class="lead">公开数据源可能受网络、地区和访问频率影响。失败会展示原因，不生成示例价格。</p><div id="sources"></div><article class="method"><h3>分析规则 v1</h3><p>黄金末值较 MA20 高 / 低 0.5%；MA20 较 MA60 高 / 低 0.5%；美元指数 5 日变化 ±0.3%；美债名义收益率 5 日变化 ±5 基点。分别作为偏多、偏空或中性条件。</p><p>至少 3 项因素可用，且至少 3 项同向，才标记偏多或偏空；其他情况显示分歧。黄金及参与判断的历史数据超过 4 个自然日则停用。此门槛兼顾周末，但不代表数据实时。</p><p>阈值是解释性规则，未做样本外盈利验证。RSI 为最近 14 日涨跌幅简单平均法，不是 Wilder 平滑法。日线可能包含当日未收盘观测，连续期货含换月影响。</p></article><article class="method"><h3>手机独立运行</h3><p>行情获取、指标计算、图表与缓存都在手机完成，无需电脑或自建后端；联网只用于请求行情、RSS 和打开原文。可选综合研判会把所列公开行情和新闻摘要直接发送给你选择的模型供应商，最多两次付费调用；没有电脑或自建后端。模型密钥在 Android Keystore 支持下加密保存；不包含自动下单或收益保证。</p><p>不是 GoldMind 官方 Android 客户端。参考其“来源可追溯、数据不可用就说明”的思路独立实现；原项目作为调研资料保留。</p><button id="original" class="outline">查看 GoldMind 原项目 ↗</button></article><article class="method"><h3>本机缓存</h3><p>只保存最近一次成功获取的行情和新闻。离线仍可回看，缓存状态和时间会明确标注。没有广告、应用账户或分析埋点。可选付费模型仅在你手动点“开始综合研判”后调用，失败不自动重试。清除行情缓存不会删除研判检验记录或本机密钥。</p><button id="clearCache" class="outline">清除缓存</button></article><p class="note">黄金局势 1.3.1 · Android 8.0+<br>仅供个人研究。公开数据的可用性与授权以各来源条款为准。</p></section>
+</main>
+<nav aria-label="主导航"><button data-page="overview" class="active"><span>◈</span>行情</button><button data-page="analysis"><span>⌁</span>局势</button><button data-page="news"><span>▤</span>消息</button><button data-page="settings"><span>◎</span>来源</button></nav>
+<script src="engine.js"></script><script src="action-plan.js"></script><script src="research.js"></script><script src="money.js"></script><script src="currency.js"></script><script src="app.js"></script><script src="dashboard.js"></script><script src="research-ui.js"></script></body></html>

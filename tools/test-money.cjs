@@ -1,0 +1,15 @@
+const assert=require('node:assert/strict');
+const M=require('../app/src/main/assets/money.js');
+const now=Date.now(),fx={price:7.2,asOf:now,fetchedAt:now};
+assert.equal(M.rate(fx,now,now),7.2);
+assert.ok(Math.abs(M.convert(31.1034768,'CNY',7.2)-7.2)<1e-10);
+assert.equal(M.convert(4000,'USD',null),4000);
+assert.equal(M.convert(4000,'CNY',null),null);
+assert.equal(M.rate({...fx,price:0},now,now),null);
+assert.equal(M.rate({...fx,asOf:now-2*86400000},now,now),null);
+assert.equal(M.rate({...fx,fetchedAt:now-2*86400000},now,now),null);
+assert.equal(M.rate({...fx,asOf:now+7200000},now,now),null);
+assert.equal(M.rate(fx,now,now-2*86400000),null);
+const snap=M.convert(4000,'CNY',fx.price);fx.price=7.3;
+assert.notEqual(snap,M.convert(4000,'CNY',fx.price));
+console.log('PASS: 10 currency checks: troy ounce, units, missing/stale/future FX and frozen versus latest rates.');
