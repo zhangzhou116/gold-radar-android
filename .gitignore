@@ -12,3 +12,9 @@ local.properties
 *.pem
 __pycache__/
 node_modules/
+private/
+secrets/
+*.p12
+*.pfx
+credentials.json
+delivery/

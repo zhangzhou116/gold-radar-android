@@ -3,10 +3,10 @@
 import hashlib
 import os
 from pathlib import Path
-import secrets
 import shutil
 import subprocess
 import zipfile
+from signing import prepare
 
 ROOT = Path(__file__).resolve().parents[1]
 SDK = Path(os.environ.get("ANDROID_HOME", str(Path.home() / "Library/Android/sdk")))
@@ -40,20 +40,8 @@ def main():
     with zipfile.ZipFile(BUILD / "unsigned.apk", "a", zipfile.ZIP_DEFLATED) as z:
         z.write(BUILD / "dex/classes.dex", "classes.dex")
     run(BT / "zipalign", "-f", "-p", "4", BUILD / "unsigned.apk", BUILD / "aligned.apk")
-    signing = ROOT / ".signing"
-    signing.mkdir(mode=0o700, exist_ok=True)
-    password_file = signing / "password"
-    keystore = signing / "goldradar.jks"
-    if not password_file.exists():
-        password_file.write_text(secrets.token_urlsafe(32))
-        password_file.chmod(0o600)
-    ENV["GOLD_APK_SIGNING_PASSWORD"] = password_file.read_text().strip()
-    if not keystore.exists():
-        run(JAVA / "bin/keytool", "-genkeypair", "-keystore", keystore, "-alias", "goldradar",
-            "-keyalg", "RSA", "-keysize", "3072", "-validity", "10000",
-            "-dname", "CN=Gold Radar Personal, O=Personal Research, C=CN",
-            "-storepass:env", "GOLD_APK_SIGNING_PASSWORD", "-keypass:env", "GOLD_APK_SIGNING_PASSWORD")
-        keystore.chmod(0o600)
+    keystore, password = prepare(ROOT, JAVA)
+    ENV["GOLD_APK_SIGNING_PASSWORD"] = password
     apk = OUT / "GoldRadar-1.3.1.apk"
     run(BT / "apksigner", "sign", "--ks", keystore, "--ks-key-alias", "goldradar",
         "--ks-pass", "env:GOLD_APK_SIGNING_PASSWORD", "--key-pass", "env:GOLD_APK_SIGNING_PASSWORD",
