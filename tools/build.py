@@ -1,6 +1,8 @@
 #!/usr/bin/env python3
 """Build a dependency-free, locally signed Android APK using Android SDK 35."""
 import hashlib
+import argparse
+import json
 import os
 from pathlib import Path
 import shutil
@@ -21,6 +23,15 @@ def run(*args):
     subprocess.run([str(a) for a in args], check=True, cwd=ROOT, env=ENV)
 
 def main():
+    parser = argparse.ArgumentParser()
+    parser.add_argument("--personal-debug", action="store_true", help="Embed local personal key; never distribute this APK")
+    args = parser.parse_args()
+    token = ""
+    if args.personal_debug:
+        config = json.loads((ROOT / "private/personal-debug.json").read_text())
+        token = config.get("token", "").strip()
+        if not token or "\n" in token or "\r" in token:
+            raise SystemExit("Personal debug token is missing or invalid")
     for p in [JAVA / "bin/javac", ANDROID, BT / "aapt2"]:
         if not p.exists():
             raise SystemExit(f"Missing build dependency: {p}")
@@ -29,9 +40,16 @@ def main():
     for p in [BUILD / "classes", BUILD / "dex", OUT]:
         p.mkdir(parents=True, exist_ok=True)
     src = ROOT / "app/src/main"
+    assets = src / "assets"
+    if args.personal_debug:
+        assets = BUILD / "personal-assets"
+        shutil.copytree(src / "assets", assets)
+        (assets / "personal-debug.json").write_text(json.dumps({"token": token}))
+        (assets / "personal-debug.json").chmod(0o600)
+        print("PERSONAL DEBUG BUILD: contains your credential; do not share this APK.")
     run(BT / "aapt2", "compile", "--dir", src / "res", "-o", BUILD / "resources.zip")
     run(BT / "aapt2", "link", "-o", BUILD / "resources.apk", "-I", ANDROID,
-        "--manifest", src / "AndroidManifest.xml", "-A", src / "assets", BUILD / "resources.zip")
+        "--manifest", src / "AndroidManifest.xml", "-A", assets, BUILD / "resources.zip")
     run(JAVA / "bin/javac", "--release", "8", "-encoding", "UTF-8", "-classpath", ANDROID,
         "-d", BUILD / "classes", *sorted((src / "java").rglob("*.java")))
     run(BT / "d8", "--release", "--min-api", "26", "--lib", ANDROID,
@@ -42,14 +60,14 @@ def main():
     run(BT / "zipalign", "-f", "-p", "4", BUILD / "unsigned.apk", BUILD / "aligned.apk")
     keystore, password = prepare(ROOT, JAVA)
     ENV["GOLD_APK_SIGNING_PASSWORD"] = password
-    apk = OUT / "GoldRadar-1.3.1.apk"
+    apk = OUT / ("GoldRadar-1.3.1-PERSONAL-DO-NOT-SHARE.apk" if args.personal_debug else "GoldRadar-1.3.1.apk")
     run(BT / "apksigner", "sign", "--ks", keystore, "--ks-key-alias", "goldradar",
         "--ks-pass", "env:GOLD_APK_SIGNING_PASSWORD", "--key-pass", "env:GOLD_APK_SIGNING_PASSWORD",
         "--out", apk, BUILD / "aligned.apk")
     run(BT / "apksigner", "verify", "--verbose", apk)
     run(BT / "aapt", "dump", "badging", apk)
     digest = hashlib.sha256(apk.read_bytes()).hexdigest()
-    (OUT / "SHA256SUMS").write_text(f"{digest}  {apk.name}\n")
+    (OUT / ("SHA256SUMS.personal" if args.personal_debug else "SHA256SUMS")).write_text(f"{digest}  {apk.name}\n")
     print(f"\nBuilt: {apk}\nSize: {apk.stat().st_size:,} bytes\nSHA256: {digest}")
 
 if __name__ == "__main__":

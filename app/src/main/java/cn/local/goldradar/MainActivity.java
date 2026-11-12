@@ -51,6 +51,7 @@ public class MainActivity extends Activity {
                 String name = uri.getPath();
                 if (name == null || !name.startsWith("/assets/") || name.contains("..")) return blocked();
                 name = name.substring(8);
+                if ("personal-debug.json".equals(name)) return blocked();
                 try {
                     String mime = name.endsWith(".js") ? "application/javascript" : name.endsWith(".css") ? "text/css" : "text/html";
                     return new WebResourceResponse(mime, "UTF-8", getAssets().open(name));

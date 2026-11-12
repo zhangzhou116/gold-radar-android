@@ -42,6 +42,15 @@ final class ResearchService {
             if(!prefs.getString("key","").isEmpty())edit.putString("key_"+old,prefs.getString("key","")).putString("key_"+old+"_iv",prefs.getString("iv",""));
             edit.remove("key").remove("iv").putInt("provider",2).putString("model","gpt-6.1-sol").putBoolean("liveSearch",true).putBoolean("sub2apiMigrated",true).apply();
         }
+        // Only explicitly built personal APKs contain this asset. Ordinary builds never do.
+        if(prefs.getString("key_2","").isEmpty()&&!prefs.getBoolean("personalKeyImported",false)){
+            try(InputStream in=activity.getAssets().open("personal-debug.json")){
+                ByteArrayOutputStream out=new ByteArrayOutputStream();byte[] b=new byte[1024];int n;
+                while((n=in.read(b))!=-1){out.write(b,0,n);if(out.size()>8192)throw new IOException("Personal configuration too large");}
+                String token=new JSONObject(out.toString("UTF-8")).getString("token").trim();
+                if(!token.isEmpty()){saveSecret("key_2",token);prefs.edit().putBoolean("personalKeyImported",true).apply();}
+            }catch(Exception ignored){/* No embedded key in distribution builds. */}
+        }
     }
     private SecretKey secret() throws Exception {
         KeyStore store=KeyStore.getInstance("AndroidKeyStore");store.load(null);
